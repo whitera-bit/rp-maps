@@ -79,7 +79,7 @@ while ($map = $db->fetch_array($maps_query)) {
 
             $newaddress = ($map['suggestions'] && $mybb->user['uid'] != 0) ? "<a href='maps.php?action=map_new&mapid=" . $map['mid'] . "' id='newaddress'>{$lang->map_button_new}</a>" : "";
 
-            $map_type = str_contains($map['image'], '.svg') ? 'image/svg+xml' : (str_contains($map['image'], '.png') ? 'image/png' : 'image/jpg');
+            $map_type = strpos($map['image'], '.svg') !== false ? 'image/svg+xml' : (strpos($map['image'], '.png') !== false ? 'image/png' : 'image/jpg');
             $map_object = '<object data="' . $map['image'] . '" type="' . $map_type . '" style="opacity: 1; width: 100%;" id="mapimage"><img src="' . $map['image'] . '" /></object><div id="mapevents"></div>';
             $map['desc'] = $parser->parse_message($map['desc'], $parser_options);
 
