@@ -574,3 +574,25 @@ function modcp_manage_maps() {
         output_page($page);
     }
 }
+
+$plugins->add_hook("member_profile_start", "add_location_profile");
+function add_location_profile() {
+    global $db, $location;
+
+    $locations_query = $db->query("
+        SELECT *
+        FROM " . TABLE_PREFIX . "locations l
+        JOIN " . TABLE_PREFIX . "users u
+        ON FIND_IN_SET(u.username, l.residents) != 0
+        WHERE u.uid = '" . $_REQUEST['uid'] . "'
+    ");
+
+    $location = "";
+
+    while ($locations = $db->fetch_array($locations_query)) {
+        if ($location != "") {
+            $location .= '<br />';
+        }
+        $location .= $locations['address'] . ', ' . $locations['name'];
+    }
+}
