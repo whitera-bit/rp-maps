@@ -21,6 +21,10 @@ Installiere und aktiviere das Plugin im ACP unter *Konfiguration > Plugins*.
 
 Unter *Konfiguration > Eigene Karten* können eigene Umgebungskarten angelegt und verwaltet werden.
 
+## Variablen
+
+Im Profil (member_profile) kann an beliebiger Stelle `{$location}` eingefügt werden, um den oder die Wohnorte einer Person auszugeben.
+
 ## Icons
 
 Die Icons stammen von [Vectors Market](https://www.flaticon.com/authors/vectors-market) auf [www.flaticon.com](https://www.flaticon.com/). Bitte füge Credits hinzu oder tausche die Icons aus.
