@@ -136,8 +136,12 @@ while ($map = $db->fetch_array($maps_query)) {
     }
 
     if ($mybb->get_input('action') == "map_new") {
+        $current_mid = isset($_REQUEST['mapid']) ? $_REQUEST['mapid'] : 1;
+        $mapslug = $db->fetch_field($db->simple_select("maps", "*", "mid = '" . $current_mid . "'"), "slug");
+        $mapname = $db->fetch_field($db->simple_select("maps", "*", "mid = '" . $current_mid . "'"), "name");
+
         add_breadcrumb($lang->maps, "maps.php");
-        add_breadcrumb($name, "maps.php?mid=" . $slug);
+        add_breadcrumb($mapname, "maps.php?mid=" . $mapslug);
         add_breadcrumb($lang->map_new);
 
         $icon_options = '';
@@ -146,8 +150,6 @@ while ($map = $db->fetch_array($maps_query)) {
         for ($file = 0; $file < count($files); $file++) {
             $icon_options .= "<input type='radio' name='icon' id='{$file}' value='{$files[$file]}' /><label for='{$file}'><img src=\"{$theme['imgdir']}/map/{$files[$file]}\"/></label>";
         }
-
-        $current_mid = isset($_REQUEST['mapid']) ? $_REQUEST['mapid'] : 1;
 
         $address_script = "<script type='text/javascript' src='{$mybb->asset_url}/jscripts/rpmaplocationinput.min.js'></script>";
 
@@ -184,15 +186,18 @@ while ($map = $db->fetch_array($maps_query)) {
             }
 
             if (isset($mybb->input['submitnewaddress'])) {
+                $themid = (int) $mybb->get_input('mid');
+                $mapslug = $db->fetch_field($db->simple_select("maps", "*", "mid = '" . $themid . "'"), "slug");
+
                 $db->insert_query("locations", $new_record);
-                redirect("maps.php?mid=" . $slug);
+                redirect("maps.php?mid=" . $mapslug);
             }
 
             eval("\$page = \"".$templates->get("maps_new")."\";");
             output_page($page);
         }
         else {
-            redirect("maps.php?mid=" . $slug);
+            redirect("maps.php?mid=" . $mapslug);
         }
     }
 
@@ -203,6 +208,7 @@ while ($map = $db->fetch_array($maps_query)) {
 
         $lid = $_REQUEST['lid'];
         $location = $db->fetch_array($db->simple_select("locations", "*", "lid = '$lid'"));
+        $mapslug = $db->fetch_field($db->simple_select("maps", "*", "mid = '" . $location['mid'] . "'"), "slug");
 
         $detailscheck = $location['details'] == '1' ? "checked" : "";
 
@@ -232,26 +238,28 @@ while ($map = $db->fetch_array($maps_query)) {
                 );
 
                 $db->update_query("locations", $new_record, "lid = '$lid'");
-                redirect("maps.php?mid=" . $slug);
+                redirect("maps.php?mid=" . $mapslug);
             }
 
             eval("\$page = \"".$templates->get("maps_edit")."\";");
             output_page($page);
         }
         else {
-            redirect("maps.php?mid=" . $slug);
+            redirect("maps.php?mid=" . $mapslug);
         }
     }
 
     if ($mybb->get_input('action') == "map_delete") {
         $lid = $_REQUEST['lid'];
+        $location = $db->fetch_array($db->simple_select("locations", "*", "lid = '$lid'"));
+        $mapslug = $db->fetch_field($db->simple_select("maps", "*", "mid = '" . $location['mid'] . "'"), "slug");
 
         if ($mybb->usergroup['canmodcp']) {
             $db->delete_query("locations", "lid = '$lid'");
-            redirect("maps.php?mid=" . $slug);
+            redirect("maps.php?mid=" . $mapslug);
         }
         else {
-            redirect("maps.php?mid=" . $slug);
+            redirect("maps.php?mid=" . $mapslug);
         }
     }
 }
