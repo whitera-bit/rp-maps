@@ -34,7 +34,7 @@ $l['acp_maps_error2'] = 'Es muss ein Bild angegeben werden.';
 $l['acp_maps_error3'] = 'Ungültige Karte ausgewählt.';
 $l['acp_maps_success'] = 'Die neue Karte wurde angelegt.';
 $l['acp_maps_success2'] = 'Die Karte wurde bearbeitet.';
-$l['acp_maps_success2'] = 'Die Karte wurde gelöscht.';
+$l['acp_maps_success3'] = 'Die Karte wurde gelöscht.';
 
 $l['template_title'] = 'RP Karten';
 
