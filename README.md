@@ -27,4 +27,4 @@ Im Profil (member_profile) kann an beliebiger Stelle `{$map_location}` eingefüg
 
 ## Icons
 
-Die Icons stammen von [Vectors Market](https://www.flaticon.com/authors/vectors-market) auf [www.flaticon.com](https://www.flaticon.com/). Bitte füge Credits hinzu oder tausche die Icons aus.
+Die Icons stammen von [Vectors Market](https://www.flaticon.com/authors/vectors-market) auf [www.flaticon.com](https://www.flaticon.com/). Bitte füge Credits hinzu oder tausche die Icons aus. Alle Bilder, die in `images/map` enthalten sind, stehen automatisch im Formular zur Auswahl.
