@@ -23,7 +23,7 @@ Unter *Konfiguration > Eigene Karten* können eigene Umgebungskarten angelegt un
 
 ## Variablen
 
-Im Profil (member_profile) kann an beliebiger Stelle `{$location}` eingefügt werden, um den oder die Wohnorte einer Person auszugeben.
+Im Profil (member_profile) kann an beliebiger Stelle `{$map_location}` eingefügt werden, um den oder die Wohnorte einer Person auszugeben.
 
 ## Icons
 

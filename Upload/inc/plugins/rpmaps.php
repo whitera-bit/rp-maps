@@ -577,7 +577,7 @@ function modcp_manage_maps() {
 
 $plugins->add_hook("member_profile_start", "add_location_profile");
 function add_location_profile() {
-    global $db, $location;
+    global $db, $map_location;
 
     $locations_query = $db->query("
         SELECT *
@@ -587,12 +587,12 @@ function add_location_profile() {
         WHERE u.uid = '" . $_REQUEST['uid'] . "'
     ");
 
-    $location = "";
+    $map_location = "";
 
     while ($locations = $db->fetch_array($locations_query)) {
-        if ($location != "") {
-            $location .= '<br />';
+        if ($map_location != "") {
+            $map_location .= '<br />';
         }
-        $location .= $locations['address'] . ', ' . $locations['name'];
+        $map_location .= $locations['address'] . ', ' . $locations['name'];
     }
 }
