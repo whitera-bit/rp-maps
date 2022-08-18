@@ -337,8 +337,6 @@ function rpm_css_add() {
 		'name' => 'rpm.css',
 		'tid' => 1,
 		"stylesheet" =>	'
-* { box-sizing: border-box; -moz-box-sizing: border-box; -webkit-box-sizing: border-box; }
-
 .map { position: relative; }
 #mapevents {
     position: absolute;
