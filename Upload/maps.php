@@ -134,132 +134,131 @@ while ($map = $db->fetch_array($maps_query)) {
             output_page($page);
         }
     }
+}
 
-    if ($mybb->get_input('action') == "map_new") {
-        $current_mid = isset($_REQUEST['mapid']) ? $_REQUEST['mapid'] : 1;
-        $mapslug = $db->fetch_field($db->simple_select("maps", "*", "mid = '" . $current_mid . "'"), "slug");
-        $mapname = $db->fetch_field($db->simple_select("maps", "*", "mid = '" . $current_mid . "'"), "name");
+if ($mybb->get_input('action') == "map_new") {
+    $current_mid = isset($_REQUEST['mapid']) ? $_REQUEST['mapid'] : 1;
+    $map = $db->fetch_array($db->simple_select("maps", "*", "mid = '" . $current_mid . "'"));
 
-        add_breadcrumb($lang->maps, "maps.php");
-        add_breadcrumb($mapname, "maps.php?mid=" . $mapslug);
-        add_breadcrumb($lang->map_new);
+    add_breadcrumb($lang->maps, "maps.php");
+    add_breadcrumb($map['name'], "maps.php?mid=" . $map['slug']);
+    add_breadcrumb($lang->map_new);
 
-        $icon_options = '';
-        $dir = "./images/map";
-        $files = array_values(array_diff(scandir($dir), array('..', '.')));
-        for ($file = 0; $file < count($files); $file++) {
-            $icon_options .= "<input type='radio' name='icon' id='{$file}' value='{$files[$file]}' /><label for='{$file}'><img src=\"{$theme['imgdir']}/map/{$files[$file]}\"/></label>";
-        }
-
-        $address_script = "<script type='text/javascript' src='{$mybb->asset_url}/jscripts/rpmaplocationinput.min.js'></script>";
-
-        if ($map['suggestions'] && $mybb->user['uid'] != 0) {
-            if ($mybb->usergroup['canmodcp']) {
-                $new_record = array(
-                    "uid" => (int) $mybb->user['uid'],
-                    "mid" => (int) $mybb->get_input('mid'),
-                    "name" => $db->escape_string($mybb->get_input('name')),
-                    "address" => $db->escape_string($mybb->get_input('address')),
-                    "details" => (int) $mybb->get_input('details'),
-                    "residents" => $db->escape_string($mybb->get_input('residents')),
-                    "icon" => $db->escape_string($mybb->get_input('icon')),
-                    "xcoord" => $db->escape_string($mybb->get_input('xcoord')),
-                    "ycoord" => $db->escape_string($mybb->get_input('ycoord')),
-                    "desc" => $db->escape_string($mybb->get_input('desc')),
-                    "accepted" => 1
-                );
-            }
-            else {
-                $new_record = array(
-                    "uid" => (int) $mybb->user['uid'],
-                    "mid" => (int) $mybb->get_input('mid'),
-                    "name" => $db->escape_string($mybb->get_input('name')),
-                    "address" => $db->escape_string($mybb->get_input('address')),
-                    "details" => (int) $mybb->get_input('details'),
-                    "residents" => $db->escape_string($mybb->get_input('residents')),
-                    "icon" => $db->escape_string($mybb->get_input('icon')),
-                    "xcoord" => $db->escape_string($mybb->get_input('xcoord')),
-                    "ycoord" => $db->escape_string($mybb->get_input('ycoord')),
-                    "desc" => $db->escape_string($mybb->get_input('desc')),
-                    "accepted" => 0
-                );
-            }
-
-            if (isset($mybb->input['submitnewaddress'])) {
-                $themid = (int) $mybb->get_input('mid');
-                $mapslug = $db->fetch_field($db->simple_select("maps", "*", "mid = '" . $themid . "'"), "slug");
-
-                $db->insert_query("locations", $new_record);
-                redirect("maps.php?mid=" . $mapslug);
-            }
-
-            eval("\$page = \"".$templates->get("maps_new")."\";");
-            output_page($page);
-        }
-        else {
-            redirect("maps.php?mid=" . $mapslug);
-        }
+    $icon_options = '';
+    $dir = "./images/map";
+    $files = array_values(array_diff(scandir($dir), array('..', '.')));
+    for ($file = 0; $file < count($files); $file++) {
+        $icon_options .= "<input type='radio' name='icon' id='{$file}' value='{$files[$file]}' /><label for='{$file}'><img src=\"{$theme['imgdir']}/map/{$files[$file]}\"/></label>";
     }
 
-    if ($mybb->get_input('action') == "map_edit") {
-        add_breadcrumb($lang->maps, "maps.php");
-        add_breadcrumb($name, "maps.php?mid=" . $slug);
-        add_breadcrumb($lang->map_edit);
+    $address_script = "<script type='text/javascript' src='{$mybb->asset_url}/jscripts/rpmaplocationinput.min.js'></script>";
 
-        $lid = $_REQUEST['lid'];
-        $location = $db->fetch_array($db->simple_select("locations", "*", "lid = '$lid'"));
-        $mapslug = $db->fetch_field($db->simple_select("maps", "*", "mid = '" . $location['mid'] . "'"), "slug");
-
-        $detailscheck = $location['details'] == '1' ? "checked" : "";
-
-        $icon_options = '';
-        $dir = "./images/map";
-        $files = array_values(array_diff(scandir($dir), array('..', '.')));
-        for ($file = 0; $file < count($files); $file++) {
-            $checked = ($location['icon'] == $files[$file]) ? "checked" : "";
-            $icon_options .= "<input type='radio' name='icon' id='{$file}' value='{$files[$file]}' $checked /><label for='{$file}'><img src=\"{$theme['imgdir']}/map/{$files[$file]}\"/></label>";
-        }
-
+    if ($map['suggestions'] && $mybb->user['uid'] != 0) {
         if ($mybb->usergroup['canmodcp']) {
-            $lid = $location['lid'];
-
-            if (isset($mybb->input['submiteditaddress'])) {
-                $lid = $mybb->get_input('lid');
-
-                $new_record = array(
-                    "name" => $db->escape_string($mybb->get_input('name')),
-                    "address" => $db->escape_string($mybb->get_input('address')),
-                    "details" => (int) $mybb->get_input('details'),
-                    "residents" => $db->escape_string($mybb->get_input('residents')),
-                    "icon" => $db->escape_string($mybb->get_input('icon')),
-                    "xcoord" => $db->escape_string($mybb->get_input('xcoord')),
-                    "ycoord" => $db->escape_string($mybb->get_input('ycoord')),
-                    "desc" => $db->escape_string($mybb->get_input('desc'))
-                );
-
-                $db->update_query("locations", $new_record, "lid = '$lid'");
-                redirect("maps.php?mid=" . $mapslug);
-            }
-
-            eval("\$page = \"".$templates->get("maps_edit")."\";");
-            output_page($page);
+            $new_record = array(
+                "uid" => (int) $mybb->user['uid'],
+                "mid" => (int) $mybb->get_input('mid'),
+                "name" => $db->escape_string($mybb->get_input('name')),
+                "address" => $db->escape_string($mybb->get_input('address')),
+                "details" => (int) $mybb->get_input('details'),
+                "residents" => $db->escape_string($mybb->get_input('residents')),
+                "icon" => $db->escape_string($mybb->get_input('icon')),
+                "xcoord" => $db->escape_string($mybb->get_input('xcoord')),
+                "ycoord" => $db->escape_string($mybb->get_input('ycoord')),
+                "desc" => $db->escape_string($mybb->get_input('desc')),
+                "accepted" => 1
+            );
         }
         else {
+            $new_record = array(
+                "uid" => (int) $mybb->user['uid'],
+                "mid" => (int) $mybb->get_input('mid'),
+                "name" => $db->escape_string($mybb->get_input('name')),
+                "address" => $db->escape_string($mybb->get_input('address')),
+                "details" => (int) $mybb->get_input('details'),
+                "residents" => $db->escape_string($mybb->get_input('residents')),
+                "icon" => $db->escape_string($mybb->get_input('icon')),
+                "xcoord" => $db->escape_string($mybb->get_input('xcoord')),
+                "ycoord" => $db->escape_string($mybb->get_input('ycoord')),
+                "desc" => $db->escape_string($mybb->get_input('desc')),
+                "accepted" => 0
+            );
+        }
+
+        if (isset($mybb->input['submitnewaddress'])) {
+            $themid = (int) $mybb->get_input('mid');
+            $mapslug = $db->fetch_field($db->simple_select("maps", "*", "mid = '" . $themid . "'"), "slug");
+
+            $db->insert_query("locations", $new_record);
             redirect("maps.php?mid=" . $mapslug);
         }
+
+        eval("\$page = \"".$templates->get("maps_new")."\";");
+        output_page($page);
+    }
+    else {
+        redirect("maps.php?mid=" . $map['slug']);
+    }
+}
+
+if ($mybb->get_input('action') == "map_edit") {
+    $lid = $_REQUEST['lid'];
+    $location = $db->fetch_array($db->simple_select("locations", "*", "lid = '$lid'"));
+    $map = $db->fetch_array($db->simple_select("maps", "*", "mid = '" . $location['mid'] . "'"));
+
+    add_breadcrumb($lang->maps, "maps.php");
+    add_breadcrumb($map['name'], "maps.php?mid=" . $map['slug']);
+    add_breadcrumb($lang->map_edit);
+
+    $detailscheck = $location['details'] == '1' ? "checked" : "";
+
+    $icon_options = '';
+    $dir = "./images/map";
+    $files = array_values(array_diff(scandir($dir), array('..', '.')));
+    for ($file = 0; $file < count($files); $file++) {
+        $checked = ($location['icon'] == $files[$file]) ? "checked" : "";
+        $icon_options .= "<input type='radio' name='icon' id='{$file}' value='{$files[$file]}' $checked /><label for='{$file}'><img src=\"{$theme['imgdir']}/map/{$files[$file]}\"/></label>";
     }
 
-    if ($mybb->get_input('action') == "map_delete") {
-        $lid = $_REQUEST['lid'];
-        $location = $db->fetch_array($db->simple_select("locations", "*", "lid = '$lid'"));
-        $mapslug = $db->fetch_field($db->simple_select("maps", "*", "mid = '" . $location['mid'] . "'"), "slug");
+    if ($mybb->usergroup['canmodcp']) {
+        $lid = $location['lid'];
 
-        if ($mybb->usergroup['canmodcp']) {
-            $db->delete_query("locations", "lid = '$lid'");
-            redirect("maps.php?mid=" . $mapslug);
+        if (isset($mybb->input['submiteditaddress'])) {
+            $lid = $mybb->get_input('lid');
+
+            $new_record = array(
+                "name" => $db->escape_string($mybb->get_input('name')),
+                "address" => $db->escape_string($mybb->get_input('address')),
+                "details" => (int) $mybb->get_input('details'),
+                "residents" => $db->escape_string($mybb->get_input('residents')),
+                "icon" => $db->escape_string($mybb->get_input('icon')),
+                "xcoord" => $db->escape_string($mybb->get_input('xcoord')),
+                "ycoord" => $db->escape_string($mybb->get_input('ycoord')),
+                "desc" => $db->escape_string($mybb->get_input('desc'))
+            );
+
+            $db->update_query("locations", $new_record, "lid = '$lid'");
+            redirect("maps.php?mid=" . $map['slug']);
         }
-        else {
-            redirect("maps.php?mid=" . $mapslug);
-        }
+
+        eval("\$page = \"".$templates->get("maps_edit")."\";");
+        output_page($page);
+    }
+    else {
+        redirect("maps.php?mid=" . $map['slug']);
+    }
+}
+
+if ($mybb->get_input('action') == "map_delete") {
+    $lid = $_REQUEST['lid'];
+    $location = $db->fetch_array($db->simple_select("locations", "*", "lid = '$lid'"));
+    $mapslug = $db->fetch_field($db->simple_select("maps", "*", "mid = '" . $location['mid'] . "'"), "slug");
+
+    if ($mybb->usergroup['canmodcp']) {
+        $db->delete_query("locations", "lid = '$lid'");
+        redirect("maps.php?mid=" . $mapslug);
+    }
+    else {
+        redirect("maps.php?mid=" . $mapslug);
     }
 }
