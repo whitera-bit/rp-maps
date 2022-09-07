@@ -77,7 +77,7 @@ while ($map = $db->fetch_array($maps_query)) {
 
             $locations_query = $mybb->usergroup['canmodcp'] ? $all_locations_query : $notall_locations_query;
 
-            $newaddress = ($map['suggestions'] && $mybb->user['uid'] != 0) ? "<a href='maps.php?action=map_new&mapid=" . $map['mid'] . "' id='newaddress'>{$lang->map_button_new}</a>" : "";
+            $newaddress = (($map['suggestions'] && $mybb->user['uid'] != 0) || $mybb->usergroup['canmodcp']) ? "<a href='maps.php?action=map_new&mapid=" . $map['mid'] . "' id='newaddress'>{$lang->map_button_new}</a>" : "";
 
             $map_type = strpos($map['image'], '.svg') !== false ? 'image/svg+xml' : (strpos($map['image'], '.png') !== false ? 'image/png' : 'image/jpg');
             $map_object = '<object data="' . $map['image'] . '" type="' . $map_type . '" style="opacity: 1; width: 100%;" id="mapimage"><img src="' . $map['image'] . '" /></object><div id="mapevents"></div>';
@@ -153,7 +153,7 @@ if ($mybb->get_input('action') == "map_new") {
 
     $address_script = "<script type='text/javascript' src='{$mybb->asset_url}/jscripts/rpmaplocationinput.min.js'></script>";
 
-    if ($map['suggestions'] && $mybb->user['uid'] != 0) {
+    if (($map['suggestions'] && $mybb->user['uid'] != 0) || $mybb->usergroup['canmodcp']) {
         if ($mybb->usergroup['canmodcp']) {
             $new_record = array(
                 "uid" => (int) $mybb->user['uid'],
