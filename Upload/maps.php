@@ -148,7 +148,7 @@ if ($mybb->get_input('action') == "map_new") {
     $dir = "./images/map";
     $files = array_values(array_diff(scandir($dir), array('..', '.')));
     for ($file = 0; $file < count($files); $file++) {
-        $icon_options .= "<input type='radio' name='icon' id='{$file}' value='{$files[$file]}' /><label for='{$file}'><img src=\"{$theme['imgdir']}/map/{$files[$file]}\"/></label>";
+        $icon_options .= "<input type='radio' name='icon' id='{$file}' value='{$files[$file]}' /><label for='{$file}'><img src=\"./images/map/{$files[$file]}\"/></label>";
     }
 
     $address_script = "<script type='text/javascript' src='{$mybb->asset_url}/jscripts/rpmaplocationinput.min.js'></script>";
