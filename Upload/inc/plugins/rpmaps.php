@@ -173,7 +173,7 @@ function add_modcp_notice() {
 $plugins->add_hook("build_forumbits_forum", "forumbit_map");
 function forumbit_map(&$forum) {
     global $db, $mybb, $lang, $templates, $plugins, $theme;
-    $lang->load('rpmaps');
+    if($lang->load('rpmaps') ?? null) {
 
     $minimap = $db->fetch_array($db->query("
         SELECT *
@@ -183,6 +183,7 @@ function forumbit_map(&$forum) {
 
     $forum['minimap'] = $minimap['image'];
     $forum['maplink'] = "<a href='maps.php?mid=" . $minimap['slug'] . "'>{$lang->map_maplink}</a>";
+    }
 }
 
 $plugins->add_hook("admin_config_action_handler", "custommaps_admin_config_action_handler");
